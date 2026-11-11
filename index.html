@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mon Autel</title>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#14162B"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><script src="config.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EDEFF6;--sf:#fff;--tx:#1A1C33;--mu:#5E6180;--ac:#A85A06;--fl:#F0A94B;--ln:#D6D9E8;--on:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14162B;--sf:#1E2140;--tx:#F2EEE6;--mu:#A3A5C0;--ac:#F0A94B;--ln:#2E3258;--on:#14162B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14162B;--sf:#1E2140;--tx:#F2EEE6;--mu:#A3A5C0;--ac:#F0A94B;--ln:#2E3258;--on:#14162B;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+main{max-width:560px;margin:0 auto;padding:16px 18px 48px}
+h1,h2,.serif{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;margin:0}
+h1{font-size:30px}h2{font-size:24px;margin-bottom:10px}
+.mu{color:var(--mu)}.sm{font-size:14px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:18px;margin:14px 0}
+.verse{font-family:"Cormorant Garamond",Georgia,serif;font-size:22px;line-height:1.35;font-weight:500;margin:0 0 8px}
+.ref{color:var(--ac);font-weight:600}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.btn{width:100%;padding:14px;border-radius:12px;border:0;background:var(--ac);color:var(--on);font-weight:600;margin-top:8px}
+.btn.off{background:transparent;color:var(--tx);border:1px solid var(--ln)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.chip{padding:10px 14px;border-radius:999px;border:1px solid var(--ln);background:var(--sf);color:var(--tx)}
+.chip.on{background:var(--ac);color:var(--on);border-color:var(--ac)}
+label{display:block;font-weight:600;margin-top:6px}
+input[type=time],input[type=text],textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--ln);background:var(--sf);color:var(--tx);font:inherit;margin:8px 0}
+textarea{min-height:110px}
+.flame{display:block;margin:0 auto 6px}
+.top{text-align:center}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:12px 0}
+.cell{aspect-ratio:1;border-radius:10px;border:1px solid var(--ln);background:var(--sf);color:var(--tx);font-weight:600;padding:0}
+.cell.done{background:var(--fl);color:#14162B;border-color:var(--fl)}
+.cell.now{outline:2px solid var(--ac);outline-offset:1px}
+.cell.fast{border-style:dashed}
+.cell.sel{box-shadow:0 0 0 3px var(--ac)}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;border:1px dashed var(--ac);color:var(--ac);font-size:14px;margin-top:6px}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.mini{background:none;border:0;color:var(--mu);padding:6px}
+.empty{text-align:center;padding:30px 8px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--ln)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+.hd{max-width:560px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 18px 4px}
+.brand{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;font-size:24px}
+.subbtn{padding:9px 16px;border-radius:999px;border:0;background:var(--ac);color:var(--on);font-weight:600}
+#tabs{max-width:560px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:0 12px}
+#tabs button{flex:none;padding:10px 12px;background:none;border:0;border-bottom:3px solid transparent;color:var(--mu);font-weight:600;font-size:15px}
+#tabs button.on{color:var(--tx);border-bottom-color:var(--ac)}
+.ok{border-color:var(--ac)}
+.li{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 14px;margin:6px 0;border-radius:12px;border:1px solid var(--ln);background:var(--sf);color:var(--tx)}
+.st{font-size:14px;font-weight:600;color:var(--mu);white-space:nowrap}.sF{color:var(--ac)}.sM{color:#C0392B}
+ul{padding-left:18px;margin:8px 0}
+h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:20px;margin:18px 0 4px}
+.seg{padding:8px 10px;border-left:3px solid var(--ln);margin:6px 0}.seg.cur{border-left-color:var(--ac);background:var(--sf);font-weight:600}
+.alrt{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 18px;background:var(--ac);color:var(--on)}.alrt button{background:var(--on);color:var(--ac);border:0;border-radius:8px;padding:6px 12px;font-weight:600}.alrt .mini{background:none;color:var(--on)}
+</style>
+</head>
+<body>
+<header><div class="hd"><span class="brand">Mon Autel</span><button id="subb" class="subbtn" onclick="go('sub')">S’abonner</button></div><div id="tabs"></div><div id="alert"></div></header>
+<main id="app"></main>
+<script>
+var T={
+famille:{n:"Famille",f:"Prie pour chaque membre de ta famille, un par un, par son nom.",v:[
+["Josué 24:15","Moi et ma maison, nous servirons l’Éternel."],
+["Psaumes 127:3","Voici, des fils sont un héritage de l’Éternel, Le fruit des entrailles est une récompense."],
+["Actes 16:31","Crois au Seigneur Jésus, et tu seras sauvé, toi et ta famille."],
+["Proverbes 22:6","Instruis l’enfant selon la voie qu’il doit suivre; Et quand il sera vieux, il ne s’en détournera pas."],
+["Psaumes 133:1","Voici, qu’il est agréable, qu’il est doux Pour des frères de demeurer ensemble!"],
+["Colossiens 3:14","Mais par-dessus toutes ces choses revêtez-vous de la charité, qui est le lien de la perfection."],
+["Psaumes 128:1","Heureux tout homme qui craint l’Éternel, Qui marche dans ses voies!"]]},
+guerison:{n:"Guérison",f:"Présente à Dieu chaque douleur, dans ton corps ou celui d’un proche.",v:[
+["Jérémie 17:14","Guéris-moi, Éternel, et je serai guéri; Sauve-moi, et je serai sauvé; Car tu es ma gloire."],
+["Psaumes 103:3","C’est lui qui pardonne toutes tes iniquités, Qui guérit toutes tes maladies."],
+["Ésaïe 53:5","Mais il était blessé pour nos péchés, brisé pour nos iniquités; Le châtiment qui nous donne la paix est tombé sur lui, Et c’est par ses meurtrissures que nous sommes guéris."],
+["Psaumes 147:3","Il guérit ceux qui ont le coeur brisé, Et il panse leurs blessures."],
+["Psaumes 30:2","Éternel, mon Dieu! J’ai crié à toi, et tu m’as guéri."],
+["Exode 15:26","Car je suis l’Éternel, qui te guérit."],
+["Psaumes 103:2","Mon âme, bénis l’Éternel, Et n’oublie aucun de ses bienfaits!"]]},
+provision:{n:"Provision",f:"Nomme tes besoins concrets et remets-les à Dieu avec confiance.",v:[
+["Philippiens 4:19","Et mon Dieu pourvoira à tous vos besoins selon sa richesse, avec gloire, en Jésus-Christ."],
+["Psaumes 23:1","L’Éternel est mon berger: je ne manquerai de rien."],
+["Matthieu 6:33","Cherchez premièrement le royaume et la justice de Dieu; et toutes ces choses vous seront données par-dessus."],
+["Proverbes 10:22","C’est la bénédiction de l’Éternel qui enrichit, Et il ne la fait suivre d’aucun chagrin."],
+["Psaumes 34:10","Les lionceaux éprouvent la disette et la faim, Mais ceux qui cherchent l’Éternel ne sont privés d’aucun bien."],
+["Matthieu 7:7","Demandez, et l’on vous donnera; cherchez, et vous trouverez; frappez, et l’on vous ouvrira."],
+["Psaumes 23:1","L’Éternel est mon berger: je ne manquerai de rien."]]},
+paix:{n:"Paix",f:"Dépose tes inquiétudes une à une, puis reste quelques instants en silence.",v:[
+["Jean 14:27","Je vous laisse la paix, je vous donne ma paix; ce n’est pas comme le monde donne, que je vous la donne."],
+["Philippiens 4:7","Et la paix de Dieu, qui surpasse toute intelligence, gardera vos coeurs et vos pensées en Jésus-Christ."],
+["Ésaïe 26:3","À celui qui est ferme dans ses sentiments Tu assures la paix, la paix, Parce qu’il se confie en toi."],
+["Psaumes 4:9","Je me couche et je m’endors en paix; Car toi seul, Éternel! tu me donnes la sécurité dans ma demeure."],
+["1 Pierre 5:7","Et déchargez-vous sur lui de tous vos soucis, car lui-même prend soin de vous."],
+["Matthieu 11:28","Venez à moi, vous tous qui êtes fatigués et chargés, et je vous donnerai du repos."],
+["Psaumes 46:2","Dieu est pour nous un refuge et un appui, Un secours qui ne manque jamais dans la détresse."]]},
+foi:{n:"Foi et courage",f:"Parle à Dieu de ce qui te fait peur et de ce que tu attends de lui.",v:[
+["Hébreux 11:1","Or la foi est une ferme assurance des choses qu’on espère, une démonstration de celles qu’on ne voit pas."],
+["Marc 11:24","C’est pourquoi je vous le dis, tout ce que vous demanderez en priant, croyez que vous l’avez reçu, et vous le verrez s’accomplir."],
+["Romains 10:17","Ainsi la foi vient de ce qu’on entend, et ce qu’on entend vient de la parole de Christ."],
+["Proverbes 3:5","Confie-toi en l’Éternel de tout ton coeur, Et ne t’appuie pas sur ta sagesse."],
+["Philippiens 4:13","Je puis tout par celui qui me fortifie."],
+["Josué 1:9","Ne t’ai-je pas donné cet ordre: Fortifie-toi et prends courage? Ne t’effraie point et ne t’épouvante point, car l’Éternel, ton Dieu, est avec toi dans tout ce que tu entreprendras."],
+["Ésaïe 41:10","Ne crains rien, car je suis avec toi; Ne promène pas des regards inquiets, car je suis ton Dieu; Je te fortifie, je viens à ton secours."]]},
+nation:{n:"Nation",f:"Prie pour les dirigeants, la justice et la paix de ton pays.",v:[
+["2 Chroniques 7:14","Si mon peuple, sur qui mon nom est invoqué, s’humilie, prie, et cherche ma face, et s’il se détourne de ses mauvaises voies, je l’exaucerai du haut des cieux, je lui pardonnerai son péché, et je guérirai son pays."],
+["Jérémie 29:7","Recherchez la paix de la ville où je vous ai fait transporter, et priez l’Éternel pour elle; car dans sa paix vous aurez la paix."],
+["Proverbes 14:34","La justice élève une nation, Mais le péché est la honte des peuples."],
+["Psaumes 33:12","Heureuse la nation dont l’Éternel est le Dieu! Heureux le peuple qu’il choisit pour son héritage!"],
+["Ésaïe 32:17","L’oeuvre de la justice sera la paix, Et le fruit de la justice le repos et la sécurité pour toujours."],
+["1 Timothée 2:1","J’exhorte donc, avant toutes choses, à faire des prières, des supplications, des requêtes, des actions de grâces, pour tous les hommes."],
+["2 Chroniques 7:14","Si mon peuple, sur qui mon nom est invoqué, s’humilie, prie, et cherche ma face, et s’il se détourne de ses mauvaises voies, je l’exaucerai du haut des cieux, je lui pardonnerai son péché, et je guérirai son pays."]]}
+};
+var STEPS=["Adoration : loue Dieu pour ce qu’il est, avant de demander quoi que ce soit.","Confession : présente-lui ce qui pèse sur ton coeur et reçois son pardon.","Reconnaissance : remercie-le pour trois bienfaits reçus cette semaine.","Intercession : prie pour les autres, puis écoute en silence."];
+var P={famille:"Père céleste, je te confie ma famille. Garde chacun des miens, rapproche les coeurs, bénis notre maison et fais de nous un lieu où ta présence habite.",guerison:"Seigneur, tu es le médecin des corps et des âmes. Je te présente chaque douleur et chaque malade. Touche, fortifie et rétablis, selon ta bonté.",provision:"Père, tu connais mes besoins avant même que je parle. Je te remets mon travail, mes finances et mes projets. Pourvois selon ta richesse et apprends-moi la confiance.",paix:"Seigneur, je dépose devant toi mes soucis et mes peurs. Calme mon coeur, garde mes pensées et donne-moi ta paix qui dépasse toute intelligence.",foi:"Seigneur, fortifie ma foi. Quand le doute vient, rappelle-moi tes promesses. Donne-moi le courage d’avancer avec toi, un pas après l’autre.",nation:"Père, je prie pour mon pays. Donne la sagesse à ceux qui dirigent, la justice aux tribunaux, la paix aux familles. Que ton règne vienne chez nous."};
+var SUM={famille:"Dès la Genèse, Dieu bénit la famille. Les Psaumes et les Proverbes parlent d’éducation et d’unité, et le Nouveau Testament appelle chacun à l’amour (Colossiens 3). Idée centrale : une maison qui sert le Seigneur.",guerison:"L’Ancien Testament présente Dieu comme celui qui guérit (Exode 15, Psaumes 103). Ésaïe 53 annonce le Serviteur qui porte nos souffrances, et Jacques 5 invite à prier avec foi pour les malades. Idée centrale : Dieu prend soin du corps comme de l’âme.",provision:"De la manne au désert (Exode 16) à Philippiens 4:19, la Bible montre un Dieu qui pourvoit. Jésus enseigne de chercher d’abord le royaume (Matthieu 6). Idée centrale : demander, travailler et se confier.",paix:"Les Psaumes et Ésaïe 26 parlent du repos en Dieu. Jésus promet sa paix (Jean 14) et Paul invite à tout présenter à Dieu dans la prière (Philippiens 4). Idée centrale : remettre ses soucis à celui qui prend soin de nous.",foi:"Hébreux 11 rappelle des croyants qui ont avancé sans voir. Josué reçoit l’ordre d’être fort et courageux, et Jésus invite à croire en priant (Marc 11). Idée centrale : la foi se nourrit de la Parole et se vit par des pas concrets.",nation:"Jérémie 29 appelle à prier pour la ville où l’on vit, 2 Chroniques 7:14 lie l’humilité du peuple à la guérison du pays, et 1 Timothée 2 demande de prier pour les dirigeants. Idée centrale : intercéder pour la société où Dieu nous place."};
+var PLANS=[["gratuit","Gratuit","0 FCFA",["1 programme personnel actif","Verset et résumé du jour","Journal et calendrier","Audio de 1 minute","Adoration guidée et musique douce"]],["standard","Standard (personnel)","1 000 FCFA / mois",["Pour toi seul(e) : interface personnelle","Programmes personnels sans limite","Audios de 3 et 5 minutes","Programmes de jeûne","Rappels automatiques (bientôt)"]],["premium","Premium (groupe / église)","3 000 FCFA / mois",["Interface Communauté, distincte de l’espace personnel","Programmer la prière pour tous les membres","Alerte de chaque membre à l’heure choisie","Invitation par WhatsApp","Audios de 3 et 5 minutes"]]];
+var KEY="monautel_v1",st={slots:null,j:[],h:[],sub:"gratuit",g:null,al:"",v:0},tab="today",sel=1,toast="",aud={len:1,on:false,tok:0,t:0,w:0,vi:0,i:-1,q:[],err:"",bg:false},form={t:"famille",d:21,h:"06:00",f:false};
+try{var raw=localStorage.getItem(KEY);if(raw)st=Object.assign(st,JSON.parse(raw))}catch(e){}
+if(!st.v){if(st.sub==="premium")st.sub="standard";else if(st.sub==="groupe")st.sub="premium";st.v=2}
+if(!st.slots)st.slots={perso:{p:st.p||null,done:st.done||{}},groupe:{p:null,done:{}}};
+delete st.p;delete st.done;
+function isG(){return st.sub==="premium"}
+function slot(){return st.slots[isG()?"groupe":"perso"]}
+Object.defineProperty(st,"p",{get:function(){return slot().p},set:function(v){slot().p=v}});
+Object.defineProperty(st,"done",{get:function(){return slot().done},set:function(v){slot().done=v}});
+if(isG())tab="grp";
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function dateOf(n){var s=new Date(st.p.s+"T00:00:00");s.setDate(s.getDate()+n-1);return s}
+function fmt(d){return d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}
+function raw0(){return Math.round((new Date(iso(new Date())+"T00:00:00")-new Date(st.p.s+"T00:00:00"))/864e5)+1}
+function today(){return Math.max(1,Math.min(st.p.d,raw0()))}
+function isFast(n){return st.p.f&&(st.p.d<=7||[3,5].indexOf(dateOf(n).getDay())>-1)}
+function count(){return Object.keys(st.done).length}
+function status(n){if(st.done[n])return"Fait";var r=raw0();return n<r?"Manqué":n===r?"Aujourd’hui":"Programmé"}
+function flame(p){var s=0.45+0.55*p;return '<svg class="flame" width="56" height="56" viewBox="0 0 64 64" aria-hidden="true"><g transform="translate(32 60) scale('+s+') translate(-32 -60)"><path fill="#F0A94B" d="M32 4C34 16 48 24 48 40a16 16 0 0 1-32 0c0-8 5-12 8-18 2 4 4 6 6 6-2-8 0-16 2-24z"/><path fill="#FFD98A" d="M32 30c1 5 8 9 8 15a8 8 0 0 1-16 0c0-4 3-6 4-9 1 2 2 3 4 3-1-4 0-7 0-9z"/></g></svg>'}
+function go(t){tab=t;render();window.scrollTo(0,0)}
+function pick(k,v){form[k]=v;render()}
+function setH(v){form.h=v}
+function archive(){if(st.p)st.h.unshift({t:st.p.t,d:st.p.d,s:st.p.s,n:count(),f:st.p.f,g:!!st.p.g})}
+function create(){archive();st.p={t:form.t,d:form.d,h:form.h,f:form.f,s:iso(new Date())};st.done={};sel=1;
+ toast="Du "+fmt(dateOf(1))+" au "+fmt(dateOf(st.p.d))+", chaque jour à "+st.p.h+". "+st.p.d+" jours de prière sur le thème « "+T[st.p.t].n+" »"+(st.p.f?", avec jeûne":"")+".";
+ save();try{if("Notification" in window)Notification.requestPermission().then(function(r){if(r==="granted")new Notification("Mon Autel",{body:"Ta prière est programmée : "+st.p.d+" jours à partir d’aujourd’hui, à "+st.p.h+"."})})}catch(e){}
+ go("prog")}
+function toggleDone(){if(st.done[sel])delete st.done[sel];else st.done[sel]=1;save();render()}
+function openDay(n){sel=n;go("today")}
+function step(n){sel=Math.max(1,Math.min(st.p.d,sel+n));render()}
+function addJ(){var v=document.getElementById("jt").value.trim();if(!v)return;st.j.unshift({id:Date.now(),d:iso(new Date()),n:sel,t:v});save();render()}
+function delJ(id){st.j=st.j.filter(function(x){return x.id!==id});save();render()}
+function reset(){if(confirm("Supprimer ce programme ? Il sera gardé dans l’historique.")){archive();st.p=null;st.done={};save();sel=1;go(isG()?"grp":"new")}}
+function plan(id){stopA();stopPad();st.sub=id;toast="";sel=st.p?today():1;tab=isG()?"grp":"today";save();render();window.scrollTo(0,0)}
+function segs(n,len){var th=T[st.p.t],v=th.v[(n-1)%7],a=[];
+ a.push("Mon Autel. Jour "+n+". Thème : "+th.n+".");
+ a.push("Écoute ce verset. "+v[0].replace(":"," verset ")+". "+v[1]);a.push(len===1?10:15);
+ if(len>1){a.push(STEPS[(n-1)%4]);a.push(len===3?20:40);a.push("Relis ce verset. "+v[1]);a.push(len===3?20:40)}
+ if(len>3){a.push(th.f);a.push(40)}
+ a.push(P[st.p.t]);a.push(len===1?10:20);a.push("Amen.");return a}
+var voices=[];
+function loadV(){try{voices=speechSynthesis.getVoices()||[]}catch(e){voices=[]}}
+try{loadV();speechSynthesis.onvoiceschanged=function(){loadV();if(tab==="audio"&&!aud.on)render()}}catch(e){}
+function frV(){return voices.filter(function(v){return /^fr/i.test(v.lang)})}
+function curV(){var f=frV();return f[aud.vi]||f[0]||null}
+function stopA(){aud.tok++;clearTimeout(aud.t);clearTimeout(aud.w);try{speechSynthesis.cancel()}catch(e){}aud.on=false;aud.i=-1}
+function playA(qq){if(!qq&&!st.p)return;
+ if(!window.speechSynthesis){aud.err="Ce navigateur ne gère pas la lecture audio. Ouvre le lien dans Chrome ou Safari.";render();return}
+ stopA();aud.err="";loadV();if(st.sub==="gratuit"&&!qq)aud.len=1;if(aud.bg&&!qq)startPad();var tok=++aud.tok,q=qq||segs(sel,aud.len),i=0;aud.q=q;aud.on=true;
+ try{speechSynthesis.resume()}catch(e){}
+ (function next(){if(tok!==aud.tok)return;if(i>=q.length){aud.on=false;aud.i=-1;render();return}
+  aud.i=i;var it=q[i++];render();
+  if(typeof it==="number"){aud.t=setTimeout(next,it*1000);return}
+  var u=new SpeechSynthesisUtterance(it),v=curV();if(v){u.voice=v;u.lang=v.lang}else u.lang="fr-FR";u.rate=0.92;
+  u.onstart=function(){clearTimeout(aud.w)};u.onend=next;u.onerror=function(){clearTimeout(aud.w);next()};
+  aud.w=setTimeout(function(){if(tok===aud.tok){stopA();aud.err="La lecture n’a pas démarré. Vérifie le volume et le mode silencieux, ou installe une voix française dans les réglages de synthèse vocale du téléphone.";render()}},6000);
+  speechSynthesis.speak(u)})()}
+function listen(){aud.len=1;tab="audio";playA()}
+function stopBtn(){stopA();stopPad();render()}
+function chips(k,opts){return '<div class="chips">'+opts.map(function(o){return '<button class="chip'+(form[k]===o[0]?' on':'')+'" onclick="pick(\''+k+'\','+JSON.stringify(o[0]).replace(/"/g,'&quot;')+')">'+o[1]+'</button>'}).join("")+'</div>'}
+function vToday(){
+ if(!st.p)return '<div class="card empty"><h2>Bienvenue sur Mon Autel</h2><p class="mu">Crée ton premier programme de prière en 30 secondes.</p><button class="btn" onclick="go(isG()?\'grp\':\'new\')">Créer mon programme</button></div>';
+ var p=st.p,th=T[p.t],v=th.v[(sel-1)%7],fast=isFast(sel),done=!!st.done[sel];
+ return '<div class="top">'+flame(count()/p.d)+'<h1>Jour '+sel+' sur '+p.d+'</h1><div class="mu sm">'+(isG()&&st.g?esc(st.g.name)+' · ':'')+th.n+' · '+count()+' sur '+p.d+' jours priés</div></div>'
+ +'<div class="card"><div class="row"><span class="mu sm">'+esc(fmt(dateOf(sel)))+'</span><span class="mu sm">Prière à '+esc(p.h)+'</span></div>'
+ +(fast?'<span class="badge">Jour de jeûne : bois de l’eau, repose-toi et prie à ton heure.</span>':'')
+ +'<p class="verse" style="margin-top:14px">'+esc(v[1])+'</p><div class="ref">'+esc(v[0])+' (Louis Segond 1910)</div></div>'
+ +'<div class="card"><b>Résumé du jour</b><p style="margin:6px 0">Médite sur '+esc(v[0])+', retiens une idée et dis-la à Dieu avec tes mots.</p><p style="margin:6px 0">'+esc(STEPS[(sel-1)%4])+'</p><p class="mu sm" style="margin:0">'+esc(th.f)+'</p></div>'
+ +'<button class="btn'+(done?' off':'')+'" onclick="toggleDone()">'+(done?'Prière faite : annuler':'J’ai prié aujourd’hui')+'</button>'
+ +'<button class="btn off" onclick="listen()">Écouter la prière du jour</button>'
+ +'<div class="row" style="margin-top:10px"><button class="mini" onclick="step(-1)"'+(sel<=1?' disabled':'')+'>Jour précédent</button><button class="mini" onclick="step(1)"'+(sel>=p.d?' disabled':'')+'>Jour suivant</button></div>';
+}
+function vProg(){
+ if(!st.p)return vToday();
+ var p=st.p,th=T[p.t],h='';
+ if(toast)h+='<div class="card ok"><b>✓ Ta prière est programmée</b><p style="margin:6px 0">'+esc(toast)+'</p><p class="mu sm" style="margin:0">Une alerte s’affiche si tu l’as autorisée. Quand l’app est fermée, le téléphone ne peut pas encore te rappeler : mets une alarme à '+esc(p.h)+'. Les rappels automatiques arrivent bientôt.</p></div>';
+ h+='<h2>Programme : '+esc(th.n)+'</h2><p class="mu sm">'+p.d+' jours · '+count()+' faits · chaque jour à '+esc(p.h)+'</p>';
+ for(var i=1;i<=p.d;i++){var s=status(i),v=th.v[(i-1)%7];h+='<button class="li" onclick="openDay('+i+')"><span><b>Jour '+i+'</b> · '+esc(fmt(dateOf(i)))+(isFast(i)?' · jeûne':'')+'<br><span class="mu sm">'+esc(v[0])+'</span></span><span class="st s'+s.charAt(0)+'">'+s+'</span></button>'}
+ var hh=st.h.filter(function(x){return !!x.g===isG()});if(hh.length){h+='<h2 style="margin-top:24px">Historique des programmes</h2>';hh.forEach(function(x){h+='<div class="card"><b>'+esc(T[x.t].n)+'</b> · '+x.d+' jours<br><span class="mu sm">Début : '+esc(x.s)+' · '+x.n+' jours priés'+(x.f?' · avec jeûne':'')+'</span></div>'})}
+ return h}
+function vCal(){
+ if(!st.p)return vToday();
+ var p=st.p,n=today(),h='<h2>Calendrier</h2><p class="mu sm">Touche un jour pour l’ouvrir. En doré : prières faites. En pointillé : jours de jeûne.</p><div class="grid">';
+ for(var i=1;i<=p.d;i++)h+='<button class="cell'+(st.done[i]?' done':'')+(i===n?' now':'')+(isFast(i)?' fast':'')+(i===sel?' sel':'')+'" onclick="openDay('+i+')" aria-label="Jour '+i+'">'+i+'</button>';
+ return h+'</div><p class="mu sm">Début : '+esc(fmt(dateOf(1)))+'. Fin : '+esc(fmt(dateOf(p.d)))+'.</p><button class="btn off" onclick="reset()">Supprimer ce programme</button>';
+}
+function vAudio(){
+ if(!st.p)return vToday();
+ var th=T[st.p.t],v=th.v[(sel-1)%7],o=[[1,"1 min"],[3,"3 min"],[5,"5 min"]],f=frV(),q=aud.on?aud.q:segs(sel,aud.len);
+ var h='<h2>Audio de prière</h2><p class="mu sm">Une voix lit le verset, laisse un silence pour méditer, puis dit une prière guidée. Durée approximative. La voix vient de ton téléphone.</p>'
+ +'<div class="card"><b>Jour '+sel+' · '+esc(v[0])+'</b></div><label>Durée</label><div class="chips">'
+ +o.map(function(x){var lk=st.sub==="gratuit"&&x[0]>1;return '<button class="chip'+(aud.len===x[0]?' on':'')+'" onclick="'+(lk?'go(\'sub\')':'aud.len='+x[0]+';render()')+'">'+x[1]+(lk?' · Standard':'')+'</button>'}).join("")+'</div>';
+ if(f.length>1)h+='<label for="vs">Voix</label><select id="vs" onchange="aud.vi=+this.value;render()">'+f.map(function(x,k){return '<option value="'+k+'"'+(k===aud.vi?' selected':'')+'>'+esc(x.name)+'</option>'}).join("")+'</select>';
+ h+='<label>Fond musical</label><div class="chips"><button class="chip'+(aud.bg?' on':'')+'" onclick="aud.bg=!aud.bg;render()">'+(aud.bg?'Activé':'Désactivé')+'</button></div>';
+ h+=(aud.on?'<button class="btn" onclick="stopBtn()">Arrêter la lecture</button>':'<button class="btn" onclick="playA()">Écouter le jour '+sel+'</button>');
+ if(aud.err)h+='<div class="card ok">'+esc(aud.err)+'</div>';
+ h+='<p class="mu sm">Voix détectées : '+voices.length+' (françaises : '+f.length+')'+(f.length?'':'. Installe une voix française dans les réglages de synthèse vocale de ton téléphone.')+'</p>'
+ +'<h2 style="font-size:20px;margin-top:18px">Texte de l’audio</h2>'
+ +q.map(function(it,k){var c=aud.on&&aud.i===k?' cur':'';return typeof it==="number"?'<div class="seg mu sm'+c+'">Silence de '+it+' secondes pour méditer</div>':'<div class="seg'+c+'">'+esc(it)+'</div>'}).join("");
+ return h}
+var resT=null;
+var SUMD={
+famille:[["Dans l’Ancien Testament","Dieu bénit l’homme et la femme dès la création (Genèse 1 et 2) et conclut son alliance avec des familles : Noé, Abraham, puis Israël. Deutéronome 6 demande aux parents de transmettre la Parole à leurs enfants à la maison, en chemin, au coucher et au lever. Josué déclare que sa maison servira l’Éternel."],["Dans les Psaumes et les Proverbes","Les Psaumes 127 et 128 présentent les enfants comme un héritage et la maison de celui qui craint Dieu comme une maison bénie. Les Proverbes insistent sur l’éducation, le respect des parents et la fidélité du couple (Proverbes 22 et 31)."],["Dans le Nouveau Testament","Jésus bénit les enfants (Marc 10) et confie sa mère à un disciple depuis la croix (Jean 19). Éphésiens 5 et 6 et Colossiens 3 parlent d’amour, de respect mutuel et d’une éducation sans exaspérer les enfants. Dans Actes 16, la foi du geôlier touche toute sa maison."],["Pour ta prière","Prie pour l’unité, la protection de chacun, le pardon entre les membres de la famille, et pour que ta maison soit un lieu de paix et de foi."]],
+guerison:[["Dans l’Ancien Testament","Dieu se révèle comme celui qui guérit (Exode 15:26). Il guérit Miriam après la prière de Moïse (Nombres 12), Naaman (2 Rois 5) et Ézéchias (2 Rois 20). Les prophètes parlent aussi de la guérison d’un peuple blessé par le péché (Jérémie 17 et 30)."],["Dans les Psaumes et les Proverbes","Les Psaumes 30, 103 et 147 louent Dieu qui guérit et panse. D’autres psaumes montrent qu’on peut prier dans la souffrance sans tout comprendre, et que Dieu est proche de ceux qui ont le coeur brisé (Psaume 34)."],["Dans le Nouveau Testament","Jésus guérit des foules entières (Matthieu 4, 8 et 9) et touche les malades. Matthieu 8 et 1 Pierre 2 reprennent Ésaïe 53 pour parler de la croix. Dans Jacques 5, les anciens prient avec foi pour le malade."],["Pour ta prière","Nomme chaque malade, demande guérison et force, et remercie pour les soins reçus. Demande aussi la patience et la paix pour ceux qui souffrent longtemps."]],
+provision:[["Dans l’Ancien Testament","Dieu nourrit son peuple de manne au désert (Exode 16), fait jaillir l’eau du rocher et multiplie l’huile de la veuve (2 Rois 4). Le principe : chaque jour a sa part, et Dieu donne de quoi vivre et de quoi partager."],["Dans les Psaumes et les Proverbes","Le Psaume 23 présente Dieu comme un berger qui ne laisse manquer de rien. Les Proverbes valorisent le travail honnête et la générosité, et mettent en garde contre l’avidité (Proverbes 10, 11 et 28)."],["Dans le Nouveau Testament","Jésus invite à ne pas s’inquiéter pour la nourriture et les habits, mais à chercher d’abord le royaume (Matthieu 6). Il multiplie les pains (Jean 6). Paul assure que Dieu pourvoira à tous les besoins des croyants (Philippiens 4)."],["Pour ta prière","Présente tes besoins précis, remercie pour ce que tu as déjà, demande la sagesse pour travailler et gérer, et un coeur généreux envers les autres."]],
+paix:[["Dans l’Ancien Testament","Le mot hébreu shalom exprime plus que le calme : la plénitude et le bien-être. Ésaïe 26:3 promet la paix à celui dont l’esprit s’appuie sur Dieu."],["Dans les Psaumes et les Proverbes","Les Psaumes 4, 23 et 46 montrent des croyants qui dorment en paix et se confient en Dieu au milieu du danger. Les Proverbes lient la paix à la sagesse et à une réponse douce (Proverbes 15)."],["Dans le Nouveau Testament","Jésus laisse sa paix à ses disciples (Jean 14) et calme la tempête (Marc 4). Paul invite à présenter toute demande à Dieu avec reconnaissance, et la paix de Dieu garde les coeurs (Philippiens 4). Pierre invite à remettre ses soucis à Dieu (1 Pierre 5)."],["Pour ta prière","Dépose tes soucis un par un, remercie pour ce qui va bien, puis reste en silence quelques instants avant de conclure."]],
+foi:[["Dans l’Ancien Testament","Abraham croit la promesse de Dieu (Genèse 15), Moïse traverse la mer (Exode 14), Josué reçoit l’ordre d’être fort et courageux (Josué 1) et David affronte Goliath en comptant sur Dieu (1 Samuel 17). La foi, c’est avancer parce que Dieu a parlé."],["Dans les Psaumes et les Proverbes","Proverbes 3:5-6 invite à se confier à Dieu de tout son coeur. Plusieurs psaumes (27, 56 et 91) transforment la peur en confiance."],["Dans le Nouveau Testament","Jésus loue la foi du centenier (Matthieu 8) et de la femme malade (Marc 5). Hébreux 11 dresse la liste de ceux qui ont cru, et Romains 10:17 rappelle que la foi vient en écoutant la Parole. Jacques 2 ajoute qu’elle se prouve par les actes."],["Pour ta prière","Parle à Dieu de ce qui te fait peur, rappelle-lui ses promesses et demande un pas concret à faire aujourd’hui."]],
+nation:[["Dans l’Ancien Testament","Joseph sert l’Égypte, Daniel prie pour son peuple en exil (Daniel 9) et Néhémie pleure sur Jérusalem avant de la reconstruire (Néhémie 1). Jérémie 29:7 demande aux exilés de chercher la paix de la ville où ils vivent. 2 Chroniques 7:14 lie humilité, prière et guérison du pays."],["Dans les Psaumes et les Proverbes","Les Proverbes disent que la justice élève une nation (14:34) et qu’un roi juste affermit le pays (Proverbes 29). Le Psaume 33 déclare heureuse la nation dont Dieu est le Seigneur, et le Psaume 72 prie pour un roi juste."],["Dans le Nouveau Testament","Paul demande de prier pour tous les hommes, pour les rois et ceux qui sont en autorité (1 Timothée 2). Romains 13 parle du rôle des autorités. Jésus pleure sur Jérusalem (Luc 19) et enseigne à prier pour la venue du règne de Dieu (Matthieu 6)."],["Pour ta prière","Prie pour les dirigeants, la justice, la paix entre les communautés, et demande à Dieu comment servir ton pays concrètement."]]};
+function vRes(){
+ var h;
+ if(resT){var th=T[resT],seen={};
+  h='<button class="mini" onclick="resT=null;render()">← Tous les résumés</button><h2>'+esc(th.n)+'</h2><p>'+esc(SUM[resT])+'</p>';
+  SUMD[resT].forEach(function(x){h+='<h3>'+x[0]+'</h3><p>'+esc(x[1])+'</p>'});
+  h+='<h3>Versets clés (Louis Segond 1910)</h3>';
+  th.v.forEach(function(v){if(seen[v[0]])return;seen[v[0]]=1;h+='<div class="card"><div class="ref">'+esc(v[0])+'</div><p style="margin:4px 0 0">'+esc(v[1])+'</p></div>'});
+  return h}
+ h='<h2>Résumés bibliques</h2><p class="mu sm">Touche un thème pour lire le détail : Ancien Testament, Psaumes et Proverbes, Nouveau Testament, et comment prier.</p>';
+ var ks=Object.keys(T);if(st.p)ks.sort(function(a,b){return(b===st.p.t)-(a===st.p.t)});
+ ks.forEach(function(k){h+='<button class="li" onclick="resT=\''+k+'\';render()"><span><b>'+esc(T[k].n)+'</b>'+(st.p&&st.p.t===k?' · ton programme':'')+'<br><span class="mu sm">'+esc(SUM[k].split(". ")[0])+'.</span></span><span class="st">Détail</span></button>'});
+ return h}
+function fields(){var o=Object.keys(T).map(function(k){return[k,T[k].n]});
+ return '<label>Thème</label>'+chips("t",o)+'<label>Durée</label>'+chips("d",[[7,"7 jours"],[21,"21 jours"],[40,"40 jours"]])
+ +'<label for="hh">Heure de prière</label><input id="hh" type="time" value="'+esc(form.h)+'" onchange="setH(this.value)"><label>Jeûne</label>'+chips("f",[[false,"Sans jeûne"],[true,"Avec jeûne"]])}
+function mkGroup(){var n=document.getElementById("gn").value.trim();if(!n)return;st.g={name:n,code:Math.random().toString(36).slice(2,8).toUpperCase(),members:[],events:[]};save();render()}
+function addM(){var v=document.getElementById("mn").value.trim();if(!v)return;st.g.members.push(v);save();render()}
+function delM(i){st.g.members.splice(i,1);save();render()}
+function progGroup(){create();var g=st.g;st.p.g=g.name;g.events.unshift({id:Date.now(),t:st.p.t,d:st.p.d,h:st.p.h,f:st.p.f,s:st.p.s});toast="Programme du groupe « "+g.name+" » : "+toast;save();render()}
+function inv(e){var s0=new Date(e.s+"T00:00:00"),s1=new Date(e.s+"T00:00:00");s1.setDate(s1.getDate()+e.d-1);
+ return "https://wa.me/?text="+encodeURIComponent("Prière de groupe « "+st.g.name+" » sur Mon Autel. Thème : "+T[e.t].n+". Du "+fmt(s0)+" au "+fmt(s1)+", chaque jour à "+e.h+". Code du groupe : "+st.g.code+". Ouvre : "+location.href)}
+function vGroup(){
+ var g=st.g;
+ if(!g)return '<h2>Créer mon groupe</h2><label for="gn">Nom du groupe</label><input id="gn" type="text" placeholder="Ex. Intercesseurs de la paroisse"><button class="btn" onclick="mkGroup()">Créer le groupe</button>';
+ var h='<h2>'+esc(g.name)+'</h2><p class="mu sm">Code du groupe : <b>'+esc(g.code)+'</b> · '+g.members.length+' membre'+(g.members.length>1?'s':'')+'</p>'
+ +'<div class="card"><b>Membres</b>'+g.members.map(function(m,i){return '<div class="row" style="margin-top:6px"><span>'+esc(m)+'</span><button class="mini" onclick="delM('+i+')" aria-label="Retirer '+esc(m)+'">Retirer</button></div>'}).join("")
+ +'<label for="mn">Ajouter un membre</label><input id="mn" type="text" placeholder="Nom du membre"><button class="btn off" onclick="addM()">Ajouter</button></div>'
+ +'<h2 style="margin-top:20px">Programmer pour la communauté</h2>'+fields()+'<button class="btn" onclick="progGroup()">Programmer et alerter la communauté</button>'
+ +'<p class="mu sm">Tous les membres sont à alerter à l’heure choisie. L’envoi automatique entre téléphones demande des comptes et un serveur : ce sera l’étape suivante. En attendant, l’alerte sonne sur cet appareil et le bouton WhatsApp prévient chaque membre.</p>';
+ if(g.events.length){h+='<h2 style="margin-top:20px">Programmes du groupe</h2>';g.events.forEach(function(e){var s0=new Date(e.s+"T00:00:00");
+  h+='<div class="card"><b>'+esc(T[e.t].n)+'</b> · '+e.d+' jours<br><span class="mu sm">Début : '+esc(fmt(s0))+' · chaque jour à '+esc(e.h)+(e.f?' · jeûne':'')+'</span><p class="mu sm">À alerter à '+esc(e.h)+' : '+(g.members.length?esc(g.members.join(", ")):'aucun membre ajouté')+'</p><a class="btn" style="display:block;text-align:center;text-decoration:none" href="'+esc(inv(e))+'" target="_blank" rel="noopener">Prévenir les membres par WhatsApp</a></div>'})}
+ return h}
+function showAlert(m){document.getElementById("alert").innerHTML='<div class="alrt"><span>'+esc(m)+'</span><span><button onclick="openDay('+today()+');hideAlert()">Ouvrir</button> <button class="mini" onclick="hideAlert()" aria-label="Fermer">✕</button></span></div>'}
+function hideAlert(){document.getElementById("alert").innerHTML=""}
+function check(){if(!st.p)return;var n=raw0();if(n<1||n>st.p.d||st.done[n])return;var d=new Date(),hm=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"),key=iso(d)+"#"+n;
+ if(hm>=st.p.h&&st.al!==key){st.al=key;save();var m="C’est l’heure de ta prière : jour "+n+" ("+T[st.p.t].n+")"+(st.p.g?", groupe « "+st.p.g+" »":"")+".";showAlert(m);
+  try{if(navigator.vibrate)navigator.vibrate([200,100,200]);if("Notification" in window&&Notification.permission==="granted")new Notification("Mon Autel",{body:m})}catch(e){}}}
+setInterval(check,20000);
+var pad={on:false,vol:0.8,t:0,m:null,err:""},AC=null,songs=[];
+var CH=[[130.81,261.63,329.63,392,493.88],[110,220,261.63,329.63,392],[87.31,174.61,261.63,329.63,440],[98,196,246.94,293.66,392]];
+var PS=[["Psaume 100",["Psaume de louange.","Poussez vers l’Éternel des cris de joie, Vous tous, habitants de la terre!","Servez l’Éternel, avec joie, Venez avec allégresse en sa présence!","Sachez que l’Éternel est Dieu! C’est lui qui nous a faits, et nous lui appartenons; Nous sommes son peuple, le troupeau de son pâturage.","Entrez dans ses portes avec reconnaissance, Dans ses parvis avec des louanges! Célébrez-le, bénissez son nom!","Car l’Éternel est bon; sa bonté dure toujours, Et sa fidélité de génération en génération."]],
+["Psaume 150 (extraits)",["Louez l’Éternel! Louez Dieu dans son sanctuaire! Louez-le dans l’étendue, séjour de sa force!","Louez-le pour ses hauts faits! Louez-le selon la richesse de sa grandeur!","Que tout ce qui respire loue l’Éternel! Louez l’Éternel!"]],
+["Psaume 103:1-2",["Mon âme, bénis l’Éternel! Que tout ce qui est en moi bénisse son saint nom!","Mon âme, bénis l’Éternel, Et n’oublie aucun de ses bienfaits!"]],
+["Psaume 23:1-3",["L’Éternel est mon berger: je ne manquerai de rien.","Il me fait reposer dans de verts pâturages, Il me dirige près des eaux paisibles.","Il restaure mon âme, Il me conduit dans les sentiers de la justice, À cause de son nom."]]];
+function chord(f){var t=AC.currentTime;f.forEach(function(x,i){var o=AC.createOscillator(),g=AC.createGain();o.type=i<2?"sine":"triangle";o.frequency.value=x;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.05,t+2.5);g.gain.linearRampToValueAtTime(0,t+9);o.connect(g);g.connect(pad.m);o.start(t);o.stop(t+9.2)})}
+function startPad(){if(pad.on)return;var C=window.AudioContext||window.webkitAudioContext;if(!C){pad.err="La musique n’est pas disponible sur ce navigateur.";return}
+ try{AC=AC||new C();AC.resume();pad.m=AC.createGain();pad.m.gain.value=pad.vol;var lp=AC.createBiquadFilter();lp.type="lowpass";lp.frequency.value=1000;pad.m.connect(lp);lp.connect(AC.destination);pad.on=true;pad.err="";var k=0;chord(CH[0]);pad.t=setInterval(function(){k++;chord(CH[k%4])},8000)}catch(e){pad.err="La musique n’a pas pu démarrer."}}
+function stopPad(){clearInterval(pad.t);if(pad.on&&pad.m){try{pad.m.gain.setTargetAtTime(0,AC.currentTime,0.3);var m=pad.m;setTimeout(function(){try{m.disconnect()}catch(e){}},1500)}catch(e){}}pad.on=false}
+function togglePad(){if(pad.on)stopPad();else startPad();render()}
+function setVol(v){pad.vol=v/100;if(pad.m)pad.m.gain.value=pad.vol}
+function stopAd(){stopA();stopPad();render()}
+function adore(i){startPad();var q=["Temps d’adoration. "+PS[i][0].replace(":"," verset ")+"."];PS[i][1].forEach(function(l){q.push(l);q.push(3)});q.push("Reste quelques instants en silence devant Dieu.");q.push(20);q.push("Amen.");playA(q)}
+function addSongs(fl){for(var i=0;i<fl.length;i++)songs.push({n:fl[i].name,u:URL.createObjectURL(fl[i])});render()}
+function segHtml(q){return q.map(function(it,k){var c=aud.on&&aud.i===k?' cur':'';return typeof it==="number"?'<div class="seg mu sm'+c+'">Silence de '+it+' secondes</div>':'<div class="seg'+c+'">'+esc(it)+'</div>'}).join("")}
+function yt(q){return "https://www.youtube.com/results?search_query="+encodeURIComponent(q)}
+function vAdore(){
+ var h='<h2>Adoration</h2><p class="mu sm">Un temps pour louer Dieu : musique douce, psaumes lus à voix haute, et tes propres chants.</p>'
+ +'<div class="card"><b>Musique douce</b><p class="mu sm" style="margin:4px 0">Un fond instrumental calme, créé sur ton téléphone, à écouter pendant la prière ou le silence.</p>'
+ +'<button class="btn'+(pad.on?'':' off')+'" onclick="togglePad()">'+(pad.on?'Arrêter la musique':'Lancer la musique douce')+'</button>'
+ +'<label for="vol">Volume</label><input id="vol" type="range" min="10" max="100" value="'+Math.round(pad.vol*100)+'" oninput="setVol(this.value)" style="width:100%">'
+ +(pad.err?'<p class="sm">'+esc(pad.err)+'</p>':'')+'</div>'
+ +'<h2 style="font-size:20px;margin-top:18px">Adoration guidée</h2><p class="mu sm">Un psaume lu lentement, avec la musique douce en fond.</p>'
+ +PS.map(function(p,i){return '<button class="li" onclick="adore('+i+')"><span><b>'+esc(p[0])+'</b></span><span class="st">Écouter</span></button>'}).join("");
+ if(aud.on||pad.on)h+='<button class="btn" onclick="stopAd()">Tout arrêter</button>';
+ if(aud.on&&aud.q.length)h+='<h3>Lecture en cours</h3>'+segHtml(aud.q);
+ if(aud.err)h+='<div class="card ok">'+esc(aud.err)+'</div>';
+ h+='<h2 style="font-size:20px;margin-top:18px">Mes chants</h2><p class="mu sm">Ajoute des chants d’adoration enregistrés sur ton téléphone. Ils restent seulement le temps de cette visite.</p>'
+ +'<input type="file" accept="audio/*" multiple onchange="addSongs(this.files)">'
+ +songs.map(function(s){return '<div class="card"><b class="sm">'+esc(s.n)+'</b><audio controls src="'+s.u+'" style="width:100%;margin-top:6px"></audio></div>'}).join("")
+ +'<h2 style="font-size:20px;margin-top:18px">Trouver des chants</h2><p class="mu sm">Les chants de louange sont protégés par des droits d’auteur : je ne peux pas les inclure ici. Ces liens ouvrent YouTube.</p>'
+ +[["Chants d’adoration en français","chants d’adoration en français"],["Louange et adoration chrétienne","louange adoration chrétienne"],["Adoration instrumentale pour prier","worship instrumental prière"]].map(function(x){return '<a class="li" style="text-decoration:none" href="'+esc(yt(x[1]))+'" target="_blank" rel="noopener"><span>'+esc(x[0])+'</span><span class="st">Ouvrir</span></a>'}).join("");
+ return h}
+function vJ(){
+ var h='<h2>Mon journal</h2>';
+ if(st.p)h+='<div class="card"><label for="jt">Note pour le jour '+sel+'</label><textarea id="jt" placeholder="Ce que j’ai prié, ce que Dieu m’a dit, mes demandes…"></textarea><button class="btn" onclick="addJ()">Enregistrer la note</button></div>';
+ else h+='<p class="mu">Crée un programme pour commencer ton journal.</p>';
+ if(!st.j.length)return h+(st.p?'<p class="mu sm">Tes notes apparaîtront ici.</p>':'');
+ return h+st.j.map(function(x){return '<div class="card"><div class="row"><span class="mu sm">'+esc(x.d)+' · jour '+x.n+'</span><button class="mini" onclick="delJ('+x.id+')" aria-label="Supprimer la note">Supprimer</button></div><p style="margin:6px 0 0;white-space:pre-wrap">'+esc(x.t)+'</p></div>'}).join("");
+}
+function vNew(){
+ var o=Object.keys(T).map(function(k){return[k,T[k].n]});
+ return '<h2>Nouveau programme</h2><label>Thème</label>'+chips("t",o)
+ +'<label>Durée</label>'+chips("d",[[7,"7 jours"],[21,"21 jours"],[40,"40 jours"]])
+ +'<label for="hh">Heure de prière</label><input id="hh" type="time" value="'+esc(form.h)+'" onchange="setH(this.value)">'
+ +'<label>Jeûne</label>'+chips("f",[[false,"Sans jeûne"],[true,"Avec jeûne"]])
+ +'<p class="mu sm">Avec jeûne : tous les jours pour 7 jours, sinon chaque mercredi et vendredi.</p>'
+ +'<button class="btn" onclick="create()">Générer et programmer</button>'
+ +(st.p?'<p class="mu sm">Un nouveau programme remplace l’actuel, qui sera gardé dans l’historique.</p>':'');
+}
+function vSub(){
+ return '<h2>Abonnement</h2><p class="mu sm">Plan actuel : <b>'+esc(PLANS.filter(function(x){return x[0]===st.sub})[0][1])+'</b>. Le paiement par Mobile Money n’est pas encore actif : tu n’es pas facturé.</p>'
+ +PLANS.map(function(x){var on=st.sub===x[0];return '<div class="card'+(on?' ok':'')+'"><div class="row"><b>'+x[1]+'</b><span class="ref">'+x[2]+'</span></div><ul>'+x[3].map(function(f){return '<li>'+f+'</li>'}).join("")+'</ul><button class="btn'+(on?' off':'')+'" onclick="plan(\''+x[0]+'\')"'+(on?' disabled':'')+'>'+(on?'Plan choisi':'Choisir ce plan')+'</button></div>'}).join("");
+}
+function render(){
+ if(tab==="grp"&&!isG())tab="today";if(tab==="new"&&isG())tab="grp";
+ var v={ado:vAdore,today:vToday,prog:vProg,cal:vCal,audio:vAudio,res:vRes,grp:vGroup,j:vJ,new:vNew,sub:vSub}[tab]();
+ document.getElementById("app").innerHTML=v;
+ var items=isG()?[["grp","Communauté"],["today","Aujourd’hui"],["prog","Programme"],["cal","Calendrier"],["audio","Audio"],["ado","Adoration"],["res","Résumé"],["j","Journal"]]:[["today","Aujourd’hui"],["prog","Programme"],["cal","Calendrier"],["audio","Audio"],["ado","Adoration"],["res","Résumé"],["j","Journal"],["new","Créer"]];
+ document.getElementById("subb").textContent=st.sub==="gratuit"?"S’abonner":"Mon plan";
+ document.getElementById("tabs").innerHTML=items.map(function(i){return '<button class="'+(tab===i[0]?'on':'')+'" onclick="go(\''+i[0]+'\')">'+i[1]+'</button>'}).join("");
+ var a=document.querySelector("#tabs .on");if(a&&a.scrollIntoView)try{a.scrollIntoView({block:"nearest",inline:"center"})}catch(e){}
+}
+if(st.p)sel=today();
+render();check();
+if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});
+</script>
+</body>
+</html>

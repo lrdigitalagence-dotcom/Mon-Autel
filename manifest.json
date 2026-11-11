@@ -1,0 +1,12 @@
+{
+  "name": "Mon Autel",
+  "short_name": "Mon Autel",
+  "description": "Programmes de prière personnalisés",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#14162B",
+  "theme_color": "#14162B",
+  "icons": [{"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}]
+}
